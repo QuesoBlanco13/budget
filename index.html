@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envelope Budget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #0a0a0a;
+        background-image: 
+            radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+        min-height: 100vh;
+        color: #333;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%),
+            linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .header h1 {
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        letter-spacing: -0.02em;
+    }
+
+    .header p {
+        color: rgba(255,255,255,0.7);
+        font-size: 1.2rem;
+        font-weight: 400;
+    }
+
+    .tabs {
+        display: flex;
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 8px;
+        margin-bottom: 40px;
+        box-shadow: 
+            0 8px 32px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .tab {
+        flex: 1;
+        padding: 16px 24px;
+        background: transparent;
+        border: none;
+        color: rgba(255,255,255,0.7);
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 16px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tab::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .tab:hover::before {
+        opacity: 1;
+    }
+
+    .tab.active {
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+        color: white;
+        box-shadow: 
+            0 8px 25px rgba(0,0,0,0.15),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .tab:hover:not(.active) {
+        color: rgba(255,255,255,0.9);
+        transform: translateY(-1px);
+    }
+
+    .tab-content {
+        display: none;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 
+            0 32px 80px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tab-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    }
+
+    .tab-content.active {
+        display: block;
+        animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.98);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid rgba(0,0,0,0.08);
+        border-radius: 16px;
+        font-size: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(10px);
+        box-shadow: 
+            0 4px 12px rgba(0,0,0,0.05),
+            inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .form-group input:focus, .form-group select:focus {
+        outline: none;
+        border-color: rgba(120, 119, 198, 0.3);
+        background: rgba(255,255,255,0.95);
+        box-shadow: 
+            0 8px 25px rgba(120, 119, 198, 0.15),
+            0 0 0 4px rgba(120, 119, 198, 0.1),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+        transform: translateY(-2px);
+    }
+
+    .btn {
+        background: linear-gradient(135deg, #7c73e6 0%, #9d50bb 100%);
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-right: 12px;
+        margin-bottom: 12px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            0 8px 25px rgba(124, 115, 230, 0.3),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 12px 35px rgba(124, 115, 230, 0.4),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+
+    .btn:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+        box-shadow: 
+            0 8px 25px rgba(255, 107, 157, 0.3),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .btn-danger:hover {
+        box-shadow: 
+            0 12px 35px rgba(255, 107, 157, 0.4),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+
+    .envelope-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .envelope {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: white;
+        padding: 32px;
+        border-radius: 24px;
+        box-shadow: 
+            0 16px 40px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .envelope::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    .envelope:hover::before {
+        opacity: 1;
+    }
+
+    .envelope:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 
+            0 25px 60px rgba(0,0,0,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.25);
+    }
+
+    .envelope h3 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .envelope-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .envelope-percentage {
+        opacity: 0.9;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .envelope-actions {
+        margin-top: 15px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .envelope-actions button {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-right: 10px;
+    }
+
+    .envelope-actions button:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .ledger-entry {
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(10px);
+        border-left: 4px solid rgba(124, 115, 230, 0.6);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 20px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .ledger-entry:hover {
+        background: rgba(255,255,255,0.8);
+        transform: translateX(8px) translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        border-left-color: rgba(124, 115, 230, 0.8);
+    }
+
+    .ledger-date {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+
+    .ledger-description {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .ledger-amount {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .income {
+        color: #28a745;
+    }
+
+    .expense {
+        color: #dc3545;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+    }
+
+    .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 40px;
+        border-radius: 24px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 
+            0 32px 80px rgba(0,0,0,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.4);
+        position: relative;
+        animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalSlideIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(50px) scale(0.9);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .modal h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .total-balance {
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 32px;
+        border-radius: 24px;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 
+            0 16px 40px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .total-balance::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    }
+
+    .total-balance h2 {
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    .total-balance .amount {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .envelope-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Envelope Budget</h1>
+            <p>Smart budgeting with envelope allocation</p>
+        </div>
+
+```
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('income')">💵 Income</button>
+        <button class="tab" onclick="switchTab('envelopes')">📮 Envelopes</button>
+        <button class="tab" onclick="switchTab('expenses')">📝 Expenses</button>
+        <button class="tab" onclick="switchTab('ledger')">📊 Ledger</button>
+    </div>
+
+    <!-- Income Tab -->
+    <div id="income" class="tab-content active">
+        <div class="total-balance">
+            <h2>Total Balance</h2>
+            <div class="amount" id="totalBalance">$0.00</div>
+        </div>
+
+        <h2>Add Income</h2>
+        <form id="incomeForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="incomeAmount">Amount</label>
+                    <input type="number" id="incomeAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="incomeType">Type</label>
+                    <select id="incomeType" required>
+                        <option value="paycheck">Paycheck</option>
+                        <option value="cash">Cash</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="incomeDescription">Description (optional)</label>
+                <input type="text" id="incomeDescription" placeholder="e.g., Weekly salary">
+            </div>
+            <button type="submit" class="btn">Add Income & Distribute</button>
+        </form>
+    </div>
+
+    <!-- Envelopes Tab -->
+    <div id="envelopes" class="tab-content">
+        <h2>Manage Envelopes</h2>
+        <button class="btn" onclick="openModal('envelopeModal')">+ Add New Envelope</button>
+        
+        <div class="envelope-grid" id="envelopeGrid">
+            <!-- Envelopes will be populated here -->
+        </div>
+    </div>
+
+    <!-- Expenses Tab -->
+    <div id="expenses" class="tab-content">
+        <h2>Add Expense</h2>
+        <form id="expenseForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="expenseAmount">Amount</label>
+                    <input type="number" id="expenseAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseEnvelope">From Envelope</label>
+                    <select id="expenseEnvelope" required>
+                        <option value="">Select envelope...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="expenseDescription">Description</label>
+                <input type="text" id="expenseDescription" required placeholder="e.g., Grocery shopping">
+            </div>
+            <button type="submit" class="btn">Record Expense</button>
+        </form>
+    </div>
+
+    <!-- Ledger Tab -->
+    <div id="ledger" class="tab-content">
+        <h2>Transaction History</h2>
+        <div id="ledgerEntries">
+            <!-- Ledger entries will be populated here -->
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Envelope Modal -->
+<div id="envelopeModal" class="modal">
+    <div class="modal-content">
+        <h2 id="envelopeModalTitle">Add New Envelope</h2>
+        <form id="envelopeForm">
+            <div class="form-group">
+                <label for="envelopeName">Envelope Name</label>
+                <input type="text" id="envelopeName" required placeholder="e.g., Transportation">
+            </div>
+            <div class="form-group">
+                <label for="envelopePercentage">Percentage of Income</label>
+                <input type="number" id="envelopePercentage" step="0.1" min="0" max="100" required placeholder="e.g., 15">
+            </div>
+            <button type="submit" class="btn">Save Envelope</button>
+            <button type="button" class="btn btn-danger" onclick="closeModal('envelopeModal')">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // In-memory data storage
+    let data = {
+        envelopes: [
+            { id: 1, name: 'Transportation', percentage: 15, balance: 0 },
+            { id: 2, name: 'Tithe', percentage: 10, balance: 0 },
+            { id: 3, name: 'Food', percentage: 25, balance: 0 },
+            { id: 4, name: 'Savings', percentage: 20, balance: 0 }
+        ],
+        transactions: [],
+        nextId: 5
+    };
+
+    let editingEnvelopeId = null;
+
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', function() {
+        renderEnvelopes();
+        renderLedger();
+        updateTotalBalance();
+        updateExpenseEnvelopeOptions();
+        
+        // Form event listeners
+        document.getElementById('incomeForm').addEventListener('submit', handleIncomeSubmit);
+        document.getElementById('expenseForm').addEventListener('submit', handleExpenseSubmit);
+        document.getElementById('envelopeForm').addEventListener('submit', handleEnvelopeSubmit);
+    });
+
+    function switchTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tabName).classList.add('active');
+        
+        // Add active class to clicked tab
+        event.target.classList.add('active');
+    }
+
+    function handleIncomeSubmit(e) {
+        e.preventDefault();
+        
+        const amount = parseFloat(document.getElementById('incomeAmount').value);
+        const type = document.getElementById('incomeType').value;
+        const description = document.getElementById('incomeDescription').value || `${type.charAt(0).toUpperCase() + type.slice(1)} income`;
+        
+        // Add to transactions
+        data.transactions.unshift({
+            id: data.nextId++,
+            type: 'income',
+            amount: amount,
+            description: description,
+            date: new Date().toISOString(),
+            envelope: null
+        });
+        
+        // Distribute to envelopes
+        data.envelopes.forEach(envelope => {
+            const allocation = (amount * envelope.percentage) / 100;
+            envelope.balance += allocation;
+            
+            // Add allocation transaction
+            data.transactions.unshift({
+                id: data.nextId++,
+                type: 'allocation',
+                amount: allocation,
+                description: `Allocated to ${envelope.name}`,
+                date: new Date().toISOString(),
+                envelope: envelope.name
+            });
+        });
+        
+        // Reset form
+        document.getElementById('incomeForm').reset();
+        
+        // Update displays
+        renderEnvelopes();
+        renderLedger();
+        updateTotalBalance();
+        
+        alert('Income added and distributed to envelopes!');
+    }
+
+    function handleExpenseSubmit(e) {
+        e.preventDefault();
+        
+        const amount = parseFloat(document.getElementById('expenseAmount').value);
+        const envelopeName = document.getElementById('expenseEnvelope').value;
+        const description = document.getElementById('expenseDescription').value;
+        
+        const envelope = data.envelopes.find(env => env.name === envelopeName);
+        
+        if (!envelope) {
+            alert('Please select a valid envelope');
+            return;
+        }
+        
+        if (envelope.balance < amount) {
+            alert(`Insufficient funds in ${envelopeName}. Available: $${envelope.balance.toFixed(2)}`);
+            return;
+        }
+        
+        // Deduct from envelope
+        envelope.balance -= amount;
+        
+        // Add to transactions
+        data.transactions.unshift({
+            id: data.nextId++,
+            type: 'expense',
+            amount: amount,
+            description: description,
+            date: new Date().toISOString(),
+            envelope: envelopeName
+        });
+        
+        // Reset form
+        document.getElementById('expenseForm').reset();
+        
+        // Update displays
+        renderEnvelopes();
+        renderLedger();
+        updateTotalBalance();
+        
+        alert('Expense recorded!');
+    }
+
+    function handleEnvelopeSubmit(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('envelopeName').value;
+        const percentage = parseFloat(document.getElementById('envelopePercentage').value);
+        
+        if (editingEnvelopeId) {
+            // Edit existing envelope
+            const envelope = data.envelopes.find(env => env.id === editingEnvelopeId);
+            envelope.name = name;
+            envelope.percentage = percentage;
+        } else {
+            // Add new envelope
+            data.envelopes.push({
+                id: data.nextId++,
+                name: name,
+                percentage: percentage,
+                balance: 0
+            });
+        }
+        
+        closeModal('envelopeModal');
+        renderEnvelopes();
+        updateExpenseEnvelopeOptions();
+    }
+
+    function renderEnvelopes() {
+        const grid = document.getElementById('envelopeGrid');
+        grid.innerHTML = '';
+        
+        data.envelopes.forEach(envelope => {
+            const envelopeDiv = document.createElement('div');
+            envelopeDiv.className = 'envelope';
+            envelopeDiv.innerHTML = `
+                <h3>${envelope.name}</h3>
+                <div class="envelope-amount">$${envelope.balance.toFixed(2)}</div>
+                <div class="envelope-percentage">${envelope.percentage}% of income</div>
+                <div class="envelope-actions">
+                    <button onclick="editEnvelope(${envelope.id})">Edit</button>
+                    <button onclick="deleteEnvelope(${envelope.id})">Delete</button>
+                </div>
+            `;
+            grid.appendChild(envelopeDiv);
+        });
+    }
+
+    function renderLedger() {
+        const ledger = document.getElementById('ledgerEntries');
+        ledger.innerHTML = '';
+        
+        if (data.transactions.length === 0) {
+            ledger.innerHTML = '<p style="text-align: center; color: #6c757d; margin-top: 50px;">No transactions yet</p>';
+            return;
+        }
+        
+        data.transactions.forEach(transaction => {
+            const entry = document.createElement('div');
+            entry.className = 'ledger-entry';
+            
+            const date = new Date(transaction.date).toLocaleDateString();
+            const amountClass = transaction.type === 'expense' ? 'expense' : 'income';
+            const amountSign = transaction.type === 'expense' ? '-' : '+';
+            
+            entry.innerHTML = `
+                <div class="ledger-date">${date}</div>
+                <div class="ledger-description">${transaction.description}</div>
+                <div class="ledger-amount ${amountClass}">${amountSign}$${transaction.amount.toFixed(2)}</div>
+                ${transaction.envelope ? `<div style="font-size: 0.9rem; color: #6c757d;">From: ${transaction.envelope}</div>` : ''}
+            `;
+            
+            ledger.appendChild(entry);
+        });
+    }
+
+    function updateTotalBalance() {
+        const total = data.envelopes.reduce((sum, envelope) => sum + envelope.balance, 0);
+        document.getElementById('totalBalance').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function updateExpenseEnvelopeOptions() {
+        const select = document.getElementById('expenseEnvelope');
+        select.innerHTML = '<option value="">Select envelope...</option>';
+        
+        data.envelopes.forEach(envelope => {
+            const option = document.createElement('option');
+            option.value = envelope.name;
+            option.textContent = `${envelope.name} ($${envelope.balance.toFixed(2)})`;
+            select.appendChild(option);
+        });
+    }
+
+    function editEnvelope(id) {
+        const envelope = data.envelopes.find(env => env.id === id);
+        editingEnvelopeId = id;
+        
+        document.getElementById('envelopeModalTitle').textContent = 'Edit Envelope';
+        document.getElementById('envelopeName').value = envelope.name;
+        document.getElementById('envelopePercentage').value = envelope.percentage;
+        
+        openModal('envelopeModal');
+    }
+
+    function deleteEnvelope(id) {
+        const envelope = data.envelopes.find(env => env.id === id);
+        
+        if (envelope.balance > 0) {
+            if (!confirm(`This envelope has $${envelope.balance.toFixed(2)}. Are you sure you want to delete it?`)) {
+                return;
+            }
+        }
+        
+        data.envelopes = data.envelopes.filter(env => env.id !== id);
+        renderEnvelopes();
+        updateExpenseEnvelopeOptions();
+        updateTotalBalance();
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+        editingEnvelopeId = null;
+        document.getElementById('envelopeForm').reset();
+        document.getElementById('envelopeModalTitle').textContent = 'Add New Envelope';
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            closeModal(e.target.id);
+        }
+    });
+</script>
+```
+
+</body>
+</html>
