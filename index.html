@@ -176,90 +176,52 @@
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
-        color: #555;
+        color: #1a1a1a;
+        font-size: 15px;
     }
 
     .form-group input, .form-group select {
         width: 100%;
-        padding: 16px 20px;
-        border: 2px solid rgba(0,0,0,0.08);
-        border-radius: 16px;
+        padding: 12px 16px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
         font-size: 16px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: rgba(255,255,255,0.8);
-        backdrop-filter: blur(10px);
-        box-shadow: 
-            0 4px 12px rgba(0,0,0,0.05),
-            inset 0 1px 0 rgba(255,255,255,0.8);
+        transition: all 0.3s ease;
+        background: #f8f9fa;
     }
 
     .form-group input:focus, .form-group select:focus {
         outline: none;
-        border-color: rgba(120, 119, 198, 0.3);
-        background: rgba(255,255,255,0.95);
-        box-shadow: 
-            0 8px 25px rgba(120, 119, 198, 0.15),
-            0 0 0 4px rgba(120, 119, 198, 0.1),
-            inset 0 1px 0 rgba(255,255,255,0.9);
-        transform: translateY(-2px);
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
     .btn {
-        background: linear-gradient(135deg, #7c73e6 0%, #9d50bb 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 16px 32px;
-        border-radius: 16px;
+        padding: 12px 24px;
+        border-radius: 10px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-right: 12px;
-        margin-bottom: 12px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 
-            0 8px 25px rgba(124, 115, 230, 0.3),
-            inset 0 1px 0 rgba(255,255,255,0.2);
-    }
-
-    .btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.6s ease;
-    }
-
-    .btn:hover::before {
-        left: 100%;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+        margin-bottom: 10px;
     }
 
     .btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 
-            0 12px 35px rgba(124, 115, 230, 0.4),
-            inset 0 1px 0 rgba(255,255,255,0.3);
-    }
-
-    .btn:active {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
 
     .btn-danger {
-        background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-        box-shadow: 
-            0 8px 25px rgba(255, 107, 157, 0.3),
-            inset 0 1px 0 rgba(255,255,255,0.2);
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
     }
 
     .btn-danger:hover {
-        box-shadow: 
-            0 12px 35px rgba(255, 107, 157, 0.4),
-            inset 0 1px 0 rgba(255,255,255,0.3);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
     }
 
     .envelope-grid {
@@ -270,18 +232,19 @@
     }
 
     .envelope {
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.15);
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         color: white;
-        padding: 32px;
-        border-radius: 24px;
-        box-shadow: 
-            0 16px 40px rgba(0,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.2);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+    }
+
+    .envelope:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     }
 
     .envelope::before {
@@ -291,22 +254,8 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
-        opacity: 0;
-        transition: opacity 0.4s ease;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
         pointer-events: none;
-    }
-
-    .envelope:hover::before {
-        opacity: 1;
-    }
-
-    .envelope:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 
-            0 25px 60px rgba(0,0,0,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.3);
-        border-color: rgba(255,255,255,0.25);
     }
 
     .envelope h3 {
@@ -338,53 +287,47 @@
     }
 
     .envelope-actions button {
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
         color: white;
-        padding: 10px 18px;
-        border-radius: 12px;
+        padding: 8px 16px;
+        border-radius: 8px;
         font-size: 14px;
-        font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-right: 10px;
+        transition: all 0.3s ease;
+        margin-right: 8px;
     }
 
     .envelope-actions button:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background: rgba(255,255,255,0.3);
     }
 
     .ledger-entry {
-        background: rgba(255,255,255,0.6);
-        backdrop-filter: blur(10px);
-        border-left: 4px solid rgba(124, 115, 230, 0.6);
-        border: 1px solid rgba(255,255,255,0.2);
-        padding: 20px;
-        margin-bottom: 16px;
-        border-radius: 16px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        background: #f8f9fa;
+        border-left: 4px solid #667eea;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 0 10px 10px 0;
+        transition: all 0.3s ease;
     }
 
     .ledger-entry:hover {
-        background: rgba(255,255,255,0.8);
-        transform: translateX(8px) translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-        border-left-color: rgba(124, 115, 230, 0.8);
+        background: #e9ecef;
+        transform: translateX(5px);
     }
 
     .ledger-date {
         font-size: 0.9rem;
-        color: #6c757d;
+        color: #666;
         margin-bottom: 5px;
+        font-weight: 500;
     }
 
     .ledger-description {
         font-weight: 600;
         margin-bottom: 5px;
+        color: #1a1a1a;
+        font-size: 16px;
     }
 
     .ledger-amount {
@@ -393,11 +336,13 @@
     }
 
     .income {
-        color: #28a745;
+        color: #059669;
+        font-weight: 700;
     }
 
     .expense {
-        color: #dc3545;
+        color: #dc2626;
+        font-weight: 700;
     }
 
     .modal {
@@ -407,8 +352,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.7);
-        backdrop-filter: blur(10px);
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
         z-index: 1000;
     }
 
@@ -416,87 +361,52 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes modalFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
     }
 
     .modal-content {
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.2);
-        padding: 40px;
-        border-radius: 24px;
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
         max-width: 500px;
         width: 90%;
         max-height: 80vh;
         overflow-y: auto;
-        box-shadow: 
-            0 32px 80px rgba(0,0,0,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.4);
-        position: relative;
-        animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
 
-    @keyframes modalSlideIn {
-        from { 
-            opacity: 0; 
-            transform: translateY(50px) scale(0.9);
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0) scale(1);
-        }
+    .tab-content h2 {
+        color: #1a1a1a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 24px;
     }
 
     .modal h2 {
         margin-bottom: 20px;
-        color: #333;
+        color: #1a1a1a;
+        font-size: 1.6rem;
+        font-weight: 700;
     }
 
     .total-balance {
-        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.2);
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
         color: white;
-        padding: 32px;
-        border-radius: 24px;
+        padding: 25px;
+        border-radius: 15px;
         text-align: center;
-        margin-bottom: 40px;
-        box-shadow: 
-            0 16px 40px rgba(0,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.2);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .total-balance::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
     .total-balance h2 {
-        font-size: 1.4rem;
-        margin-bottom: 12px;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
         opacity: 0.9;
-        font-weight: 500;
     }
 
     .total-balance .amount {
-        font-size: 3rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 700;
     }
 
     .form-row {
@@ -814,7 +724,7 @@
         ledger.innerHTML = '';
         
         if (data.transactions.length === 0) {
-            ledger.innerHTML = '<p style="text-align: center; color: #6c757d; margin-top: 50px;">No transactions yet</p>';
+            ledger.innerHTML = '<p style="text-align: center; color: #666; margin-top: 50px; font-size: 16px;">No transactions yet</p>';
             return;
         }
         
@@ -830,7 +740,7 @@
                 <div class="ledger-date">${date}</div>
                 <div class="ledger-description">${transaction.description}</div>
                 <div class="ledger-amount ${amountClass}">${amountSign}$${transaction.amount.toFixed(2)}</div>
-                ${transaction.envelope ? `<div style="font-size: 0.9rem; color: #6c757d;">From: ${transaction.envelope}</div>` : ''}
+                ${transaction.envelope ? `<div style="font-size: 0.9rem; color: #666; font-weight: 500;">From: ${transaction.envelope}</div>` : ''}
             `;
             
             ledger.appendChild(entry);
